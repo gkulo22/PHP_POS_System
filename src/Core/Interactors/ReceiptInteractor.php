@@ -75,6 +75,11 @@ class ReceiptInteractor {
         if (!($receipt instanceof Receipt)) {
             return new Result(404, new DeleteReceiptErrorMessage($receipt_id));
         }
+
+        if (!$receipt->getStatus()) {
+            return new Result(404, new ReceiptClosedErrorMessage($receipt_id));
+        }
+
         $this->receiptRepository->delete($receipt_id);
         return new Result(200, new EmptyResponse());
     }

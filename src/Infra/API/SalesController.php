@@ -2,7 +2,8 @@
 namespace App\Infra\API;
 
 use App\Core\CoreFacade;
-use App\Core\DTOs\GetAllSalesResponse;
+use App\Core\DTOs\Sales\GetAllSalesResponse;
+use Laminas\Diactoros\Response\JsonResponse;
 
 class SalesController {
     private CoreFacade $core;
@@ -10,8 +11,8 @@ class SalesController {
         $this->core = $core;
     }
 
-    public function getSales(): GetAllSalesResponse {
-        return $this->core->getSales();
+    public function getSales(array $args): JsonResponse {
+        return new JsonResponse($this->core->getSales()->toArray(), 200);
     }
 }
 

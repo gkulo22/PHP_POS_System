@@ -23,4 +23,12 @@ class Unit {
             'name' => $this->name
         ];
     }
+
+    public function fromArray(array $data): void {
+        foreach ($data as $key => $value) {
+            if (property_exists($this, $key)) {
+                $this->$key = $value;
+            }
+        }
+    }
 }

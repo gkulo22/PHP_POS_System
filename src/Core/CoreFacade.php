@@ -1,8 +1,9 @@
 <?php
 namespace App\Core;
 
-use App\Core\DTOs\GetAllSalesResponse;
+use App\Core\DTOs\Sales\GetAllSalesResponse;
 use App\Core\DTOs\Products\CreateProductRequest;
+use App\Core\DTOs\Products\GetOneProductResponse;
 use App\Core\DTOs\Products\UpdateProductRequest;
 use App\Core\DTOs\Receipts\addProductInReceiptRequest;
 use App\Core\DTOs\Receipts\UpdateReceiptRequest;
@@ -11,6 +12,7 @@ use App\Core\Interactors\ProductInteractor;
 use App\Core\Interactors\ReceiptInteractor;
 use App\Core\Interactors\SalesInteractor;
 use App\Core\Interactors\UnitInteractor;
+use App\Core\Models\Product;
 use Laminas\Diactoros\Response\JsonResponse;
 
 class CoreFacade {
@@ -77,12 +79,13 @@ class CoreFacade {
     }
 
     public function addProductInReceipt(string $receipt_id, addProductInReceiptRequest $request): JsonResponse {
-        $result = $this->productInteractor->getOneProduct($receipt_id);
-        if (!$result->getStatusCode() === 404) {
+        $result = $this->productInteractor->getOneProduct($request->getProductId());
+        if ($result->getStatusCode() === 404) {
             return new JsonResponse($result->getContent()->toArray(), $result->getStatusCode());
         }
 
-        $product = $result->getContent()->getProduct();
+        $productArr = $result->getContent()->toArray();
+        $product = new Product($productArr['product']['id'], $productArr['product']['unit_id'], $productArr['product']['name'], $productArr['product']['barcode'], $productArr['product']['price']);
 
         $result = $this->receiptInteractor->addProductInReceipt($receipt_id, $request->getQuantity(), $product);
         return new JsonResponse($result->getContent()->toArray(), $result->getStatusCode());

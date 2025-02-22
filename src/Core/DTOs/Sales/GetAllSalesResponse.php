@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Core\DTOs;
+namespace App\Core\DTOs\Sales;
 
 use App\Core\Models\Sales;
 use App\Core\ResponseInterface;

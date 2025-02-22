@@ -31,9 +31,7 @@ class InMemoryRepository implements RepositoryInterface {
     {
         if (isset($this->_store[$entityId])) {
             $entity = $this->_store[$entityId];
-            foreach ($data as $key => $value) {
-                $entity->$key = $value;
-            }
+            $entity->fromArray($data);
             return true;
         }
         return false;

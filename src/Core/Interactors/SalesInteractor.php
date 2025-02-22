@@ -1,7 +1,7 @@
 <?php
 namespace App\Core\Interactors;
 
-use App\Core\DTOs\GetAllSalesResponse;
+use App\Core\DTOs\Sales\GetAllSalesResponse;
 use App\Core\Models\Sales;
 
 class SalesInteractor {

@@ -16,26 +16,32 @@ class ProductController {
         $this->core = $core;
     }
 
-    public function createProduct(Request $request): JsonResponse
+    public function createProduct(array $args): JsonResponse
     {
+        $request = $args['request'];
+
         $data = json_decode($request->getBody(), true);
         $productBase = new CreateProductRequest($data['unit_id'], $data['name'], $data['barcode'], $data['price']);
 
         return $this->core->createProduct($productBase);
     }
 
-    public function getOneProduct(string $product_id): JsonResponse
+    public function getOneProduct(array $args): JsonResponse
     {
+        $product_id = $args['id'];
         return $this->core->getOneProduct($product_id);
     }
 
-    public function getAllProducts(): JsonResponse
+    public function getAllProducts(array $args): JsonResponse
     {
         return $this->core->getAllProducts();
     }
 
-    public function updateProductPrice(string $product_id, Request $request): JsonResponse
+    public function updateProductPrice(array $args): JsonResponse
     {
+        $request = $args['request'];
+        $product_id = $args['id'];
+
         $data = json_decode($request->getBody(), true);
         $productBase = new UpdateProductRequest($data['price']);
         return $this->core->updateProductPrice($product_id, $productBase);

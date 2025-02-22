@@ -25,8 +25,16 @@ class Receipt {
         return $this->products;
     }
 
+    public function addProduct(ProductForReceipt $product): void {
+        $this->products[] = $product;
+    }
+
     public function getTotal(): float {
         return $this->total;
+    }
+
+    public function setTotal(float $total): void {
+        $this->total = $total;
     }
 
     public function toArray(): array {
@@ -36,5 +44,13 @@ class Receipt {
             'products' => $this->products,
             'total' => $this->total
         ];
+    }
+
+    public function fromArray(array $data): void {
+        foreach ($data as $key => $value) {
+            if (property_exists($this, $key)) {
+                $this->$key = $value;
+            }
+        }
     }
 }

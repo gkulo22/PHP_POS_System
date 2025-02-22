@@ -11,18 +11,20 @@ class UnitController {
     public function __construct(CoreFacade $core) {
         $this->core = $core;
     }
-    public function createUnit(Request $request): JsonResponse {
+    public function createUnit(array $args): JsonResponse {
+        $request = $args['request'];
         $data = json_decode($request->getBody(), true);
         $unitBase = new CreateUnitRequest($data['name']);
 
         return $this->core->createUnit($unitBase);
     }
 
-    public function getOneUnit(string $unit_id): JsonResponse {
+    public function getOneUnit(array $args): JsonResponse {
+        $unit_id = $args['id'];
         return $this->core->getOneUnit($unit_id);
     }
 
-    public function getAllUnits(): JsonResponse {
+    public function getAllUnits(array $args): JsonResponse {
         return $this->core->getAllUnits();
     }
 }

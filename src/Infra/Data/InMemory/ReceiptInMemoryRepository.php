@@ -9,8 +9,8 @@ class ReceiptInMemoryRepository extends InMemoryRepository implements ReceiptRep
     {
         $receipt = $this->getOne($receipt_id);
         if ($receipt) {
-            $receipt->products[] = $product;
-            $receipt->total = array_sum(array_column($receipt->getProducts(), 'total'));
+            $receipt->addProduct($product);
+            $receipt->setTotal(array_sum(array_column($receipt->getProducts(), 'total')));
             return true;
         }
         return false;

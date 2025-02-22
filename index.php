@@ -49,7 +49,7 @@ $dispatcher = simpleDispatcher(function (RouteCollector $r) {
     $r->addRoute('DELETE', '/receipts/{id}', 'App\Infra\API\ReceiptController@deleteReceipt');
 
     // Sales Route
-    $r->addRoute('GET', '/sales', 'App\Infra\API\SaleController@getSales');
+    $r->addRoute('GET', '/sales', 'App\Infra\API\SalesController@getSales');
 });
 
 $httpMethod = $_SERVER['REQUEST_METHOD'];
@@ -75,7 +75,13 @@ switch ($routeInfo[0]) {
 
         $request = Laminas\Diactoros\ServerRequestFactory::fromGlobals();
 
+        $args = [];
+        if (isset($vars['id'])) {
+            $args['id'] = $vars['id'];
+        }
+        $args['request'] = $request;
+
         $controllerInstance = new $controller($core);
-        echo $controllerInstance->$method($vars, $request)->getBody();
+        echo $controllerInstance->$method($args)->getBody();
         break;
 }

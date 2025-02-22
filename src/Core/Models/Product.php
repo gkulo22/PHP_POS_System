@@ -44,4 +44,12 @@ class Product {
             'price' => $this->price
         ];
     }
+
+    public function fromArray(array $data): void {
+        foreach ($data as $key => $value) {
+            if (property_exists($this, $key)) {
+                $this->$key = $value;
+            }
+        }
+    }
 }
