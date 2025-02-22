@@ -32,7 +32,7 @@ class Receipt {
     public function toArray(): array {
         return [
             'id' => $this->id,
-            'status' => $this->status,
+            'status' => $this->status ? 'open' : 'closed',
             'products' => $this->products,
             'total' => $this->total
         ];

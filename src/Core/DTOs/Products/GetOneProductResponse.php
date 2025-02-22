@@ -11,6 +11,9 @@ class GetOneProductResponse implements ResponseInterface {
         $this->product = $product;
     }
 
+    public function getProduct(): Product {
+        return $this->product;
+    }
 
     public function toArray(): array
     {

@@ -2,7 +2,7 @@
 namespace App\Core\Exceptions\Units;
 
 use App\Core\BaseExceptionInterface;
-class UnitGetErrorMessage implements BaseExceptionInterface {
+class GetUnitErrorMessage implements BaseExceptionInterface {
     private array $error;
 
     public function __construct(string $unitId) {

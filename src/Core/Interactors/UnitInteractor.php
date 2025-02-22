@@ -6,7 +6,7 @@ use App\Core\DTOs\Units\CreateUnitResponse;
 use App\Core\DTOs\Units\GetAllUnitResponse;
 use App\Core\DTOs\Units\GetOneUnitResponse;
 use App\Core\Exceptions\Units\UnitCreationErrorMessage;
-use App\Core\Exceptions\Units\UnitGetErrorMessage;
+use App\Core\Exceptions\Units\GetUnitErrorMessage;
 use App\Core\Models\Unit;
 use App\Core\Repositories\UnitRepository;
 use App\Core\RepositoryInterface;
@@ -33,7 +33,7 @@ class UnitInteractor {
     public function getOneUnit(string $unit_id): Result {
         $unit = $this->unitRepository->getOne($unit_id);
         if (!($unit instanceof Unit)) {
-            return new Result(404, new UnitGetErrorMessage($unit_id));
+            return new Result(404, new GetUnitErrorMessage($unit_id));
         }
 
         return new Result(200, new GetOneUnitResponse($unit));

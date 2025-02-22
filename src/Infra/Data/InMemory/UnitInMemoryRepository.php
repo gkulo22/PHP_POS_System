@@ -7,7 +7,7 @@ class UnitInMemoryRepository extends InMemoryRepository implements UnitRepositor
     public function hasName($name): bool
     {
         foreach ($this->_store as $unit) {
-            if ($unit->name === $name) {
+            if ($unit->getName() === $name) {
                 return true;
             }
         }

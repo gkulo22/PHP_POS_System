@@ -15,14 +15,18 @@ use App\Infra\API\UnitController;
 use App\Infra\API\ProductController;
 use FastRoute\RouteCollector;
 use function FastRoute\simpleDispatcher;
-use DI\Container;
 
 
-$container = new Container();
 
-//        $connection = new PDO('sqlite:oop.db');
-//        $database = new SQLite($connection);
-$database = new InMemory();
+session_start();
+
+if (!isset($_SESSION['database'])) {
+    //        $connection = new PDO('sqlite:oop.db');
+//    $_SESSION['database'] = new SQLite($connection);
+    $_SESSION['database'] = new InMemory();
+}
+
+$database = $_SESSION['database'];
 $core = new CoreFacade($database);
 
 $dispatcher = simpleDispatcher(function (RouteCollector $r) {
@@ -36,6 +40,16 @@ $dispatcher = simpleDispatcher(function (RouteCollector $r) {
     $r->addRoute('GET', '/products/{id}', 'App\Infra\API\ProductController@getOneProduct');
     $r->addRoute('GET', '/products', 'App\Infra\API\ProductController@getAllProducts');
     $r->addRoute('PATCH', '/products/{id}', 'App\Infra\API\ProductController@updateProductPrice');
+
+    // Receipt Routes
+    $r->addRoute('POST', '/receipts', 'App\Infra\API\ReceiptController@createReceipt');
+    $r->addRoute('GET', '/receipts/{id}', 'App\Infra\API\ReceiptController@getOneReceipt');
+    $r->addRoute('POST', '/receipts/{id}', 'App\Infra\API\ReceiptController@addProductInReceipt');
+    $r->addRoute('PATCH', '/receipts/{id}', 'App\Infra\API\ReceiptController@closeReceipt');
+    $r->addRoute('DELETE', '/receipts/{id}', 'App\Infra\API\ReceiptController@deleteReceipt');
+
+    // Sales Route
+    $r->addRoute('GET', '/sales', 'App\Infra\API\SaleController@getSales');
 });
 
 $httpMethod = $_SERVER['REQUEST_METHOD'];
@@ -62,6 +76,6 @@ switch ($routeInfo[0]) {
         $request = Laminas\Diactoros\ServerRequestFactory::fromGlobals();
 
         $controllerInstance = new $controller($core);
-        echo $controllerInstance->$method($request, $vars)->getBody();
+        echo $controllerInstance->$method($vars, $request)->getBody();
         break;
 }

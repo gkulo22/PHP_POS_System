@@ -1,8 +1,11 @@
 <?php
 namespace App\Core;
 
+use App\Core\DTOs\GetAllSalesResponse;
 use App\Core\DTOs\Products\CreateProductRequest;
 use App\Core\DTOs\Products\UpdateProductRequest;
+use App\Core\DTOs\Receipts\addProductInReceiptRequest;
+use App\Core\DTOs\Receipts\UpdateReceiptRequest;
 use App\Core\DTOs\Units\CreateUnitRequest;
 use App\Core\Interactors\ProductInteractor;
 use App\Core\Interactors\ReceiptInteractor;
@@ -68,6 +71,42 @@ class CoreFacade {
     }
 
     # Receipts
+    public function createReceipt(): JsonResponse {
+        $result = $this->receiptInteractor->createReceipt();
+        return new JsonResponse($result->getContent()->toArray(), $result->getStatusCode());
+    }
 
+    public function addProductInReceipt(string $receipt_id, addProductInReceiptRequest $request): JsonResponse {
+        $result = $this->productInteractor->getOneProduct($receipt_id);
+        if (!$result->getStatusCode() === 404) {
+            return new JsonResponse($result->getContent()->toArray(), $result->getStatusCode());
+        }
+
+        $product = $result->getContent()->getProduct();
+
+        $result = $this->receiptInteractor->addProductInReceipt($receipt_id, $request->getQuantity(), $product);
+        return new JsonResponse($result->getContent()->toArray(), $result->getStatusCode());
+    }
+
+    public function getOneReceipt(string $receipt_id): JsonResponse {
+        $result = $this->receiptInteractor->getOneReceipt($receipt_id);
+        return new JsonResponse($result->getContent()->toArray(), $result->getStatusCode());
+    }
+
+    public function updateReceiptStatus(string $receipt_id, UpdateReceiptRequest $request): JsonResponse {
+        $result = $this->receiptInteractor->updateReceiptStatus($receipt_id, $request->getStatus());
+        return new JsonResponse($result->getContent()->toArray(), $result->getStatusCode());
+    }
+
+    public function deleteReceipt(string $receipt_id): JsonResponse {
+        $result = $this->receiptInteractor->deleteReceipt($receipt_id);
+        return new JsonResponse($result->getContent()->toArray(), $result->getStatusCode());
+    }
+
+    // Sales
+    public function getSales(): GetAllSalesResponse {
+        $receipts = $this->receiptInteractor->getAllReceipts();
+        return SalesInteractor::countRevenue($receipts);
+    }
 }
 

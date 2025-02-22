@@ -7,7 +7,7 @@ class ProductInMemoryRepository extends InMemoryRepository implements ProductRep
     public function hasBarcode($barcode): bool
     {
         foreach ($this->_store as $product) {
-            if ($product->barcode === $barcode) {
+            if ($product->getBarcode() === $barcode) {
                 return true;
             }
         }

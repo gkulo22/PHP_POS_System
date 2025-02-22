@@ -34,7 +34,7 @@ class ProductController {
         return $this->core->getAllProducts();
     }
 
-    public function updateProductPrice(Request $request, string  $product_id): JsonResponse
+    public function updateProductPrice(string $product_id, Request $request): JsonResponse
     {
         $data = json_decode($request->getBody(), true);
         $productBase = new UpdateProductRequest($data['price']);
